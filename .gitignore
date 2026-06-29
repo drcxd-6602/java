@@ -1,0 +1,11 @@
+# JetBrains IDE
+.idea/
+*.iml
+
+# Compiled class files
+*.class
+
+# Build output
+out/
+target/
+bin/
