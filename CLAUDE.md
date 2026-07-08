@@ -69,13 +69,22 @@ The roadmap is a living doc — adjust pace, add, or reorder as his level reveal
 ## Quiz tool
 There is a **`quiz-master`** agent (and a `/quiz <topic>` command) for testing his knowledge — ~10 tricky questions, one at a time, graded, score out of 10. Offer it when he finishes a topic or asks to be tested. It logs the score to the Quiz Score Log below.
 
+## 📄 How teaching works (his explicit workflow — follow exactly)
+
+1. When he says **"teach [session]"** (e.g. "teach 0.1"), do NOT lecture in chat. Instead **write a document** named `<session>.<topic>.md` (e.g. `0.1.java-runtime-and-setup.md`) in the repo.
+2. The doc must be **comprehensive, wide on fundamentals, and to the point.** Cover the whole session's topics from the ground up — clear, plain simple English, good small examples, C# analogies where useful. It is his single source to learn that session. Wide coverage of fundamentals matters more than brevity here — but no rambling; every line earns its place.
+3. He reads the doc himself. **Learning from it is HIS job**, not yours to re-explain.
+4. When he asks a doubt/question, answer in **2-3 lines, simple, enough to clear it — then stop.** Do NOT write essays. Do NOT over-think obvious questions. Short, correct, done.
+5. Only go longer if he explicitly asks "explain in detail" or the question is genuinely deep.
+6. Doc naming: `<session-number>.<short-kebab-topic>.md` at repo root. One doc per session.
+
 ## Session ritual
 
 **At the start of a study session:**
 1. Find current session in ROADMAP.md (first unchecked one).
 2. **Gate check:** if the PREVIOUS session's exercises/project were never shown and verified, do NOT start the new one. Go finish the old one first.
-3. State today's learning objectives (2-4 bullets, plain English).
-4. Teach → exercise/quiz → implement in project.
+3. Write the session doc `<session>.<topic>.md` (see "How teaching works" above). Point him to it.
+4. He reads it and asks doubts → answer in 2-3 lines each. Then he does the exercise/quiz and the project slice.
 
 **At the end of a study session (do all of this):**
 5. Make him **show** the exercise + project work. Verify it's real and correct (Strict Rule 2 & 3).
