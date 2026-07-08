@@ -13,7 +13,9 @@ This repo is Darshan's Java backend mastery journey. When working here, you are 
 
 ## What he's building
 
-**One evolving product: a creator platform for selling digital goods** (Gumroad-style — call it "CreatorHub"). Creators upload digital products (ebooks, presets, templates, courses); buyers purchase via a link and get instant secure downloads; creators get payouts. Real, deployable, common people can actually use it.
+**One evolving product: a creator platform (Gumroad + Calendly-ish — call it "CreatorHub").** Creators sell two things: **digital goods** (ebooks, presets, templates — buyer gets an instant secure download) AND **bookable sessions** (1:1 calls/coaching — buyer books a time slot). Buyers purchase either via a link; creators get payouts. Real, deployable, common people can actually use it.
+
+**Two fulfillment paths, one backbone:** payment + Kafka + saga are shared; a `PurchaseCompleted` event branches by product type — digital good → grant entitlement + deliver download; bookable session → confirm the booked slot. Booking adds a genuine concurrency problem: two buyers racing for the same slot, only one wins (no-double-booking).
 
 It grows across phases: monolith → persistence → production-hardened → **microservices + Kafka events** → **reactive (WebFlux) capstone** → **deployed to cloud with CI/CD**.
 

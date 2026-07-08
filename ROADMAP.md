@@ -1,7 +1,7 @@
 # 🚀 Java Backend Mastery Roadmap — Darshan
 
 > **Goal:** Job-ready Java backend developer at product companies.
-> **Approach:** Learn by building **ONE** evolving product — **CreatorHub**, a Gumroad-style platform where creators sell digital goods (ebooks, presets, templates) and buyers get instant secure downloads. Real, deployable, common people can use it.
+> **Approach:** Learn by building **ONE** evolving product — **CreatorHub**, a Gumroad + Calendly-ish platform where creators sell **digital goods** (buyer gets instant secure downloads) AND **bookable sessions** (buyer books a 1:1 time slot). Two fulfillment paths, one payment/Kafka/saga backbone. Real, deployable, common people can use it.
 > **Fixed decisions:** Stripe **test mode** for payments · **MinIO → S3** for file storage · signature event flow `PurchaseCompleted → GrantEntitlement → DeliverDownload → NotifyBuyer → CreditCreatorPayout → UpdateSalesStats`.
 > **Time:** 2 hrs weeknights · 3 hrs weekends (~19 hrs/week) · ~4 months.
 > **DSA:** handled separately (morning LeetCode) — not in this roadmap.
@@ -106,6 +106,7 @@
 - [ ] Learn: `ConcurrentHashMap`, `Atomic*`, `CountDownLatch`, thread-safe design
 - [ ] Learn: virtual threads (Java 21) — what they change for backend
 - [ ] 🏋️ **Exercise:** Fetch 5 "product prices" concurrently with `CompletableFuture`, combine results, handle one failing.
+- [ ] 🏋️ **Exercise (preview of a real feature):** Simulate two buyers booking the **same session slot** from two threads at once. Watch both "succeed" (the bug). Fix it so exactly one wins — you'll do the DB-backed version for real in Phase 3.
 - [ ] 🛠️ **PROJECT:** Refactor the in-memory digital-product store (from 1.1) into a small service layer with a thread-safe catalog. Commit.
 - [ ] 🧩 **Quiz:** Explain to an interviewer: thread pool vs virtual threads — when does each win?
 
@@ -133,8 +134,9 @@
 - [ ] Learn: `@RestController`, `@GetMapping`/`@PostMapping`/etc, `@PathVariable`, `@RequestParam`, `@RequestBody`
 - [ ] Learn: `ResponseEntity`, status codes, content negotiation, DTOs vs entities
 - [ ] Learn: REST design basics (resources, verbs, idempotency)
-- [ ] 🛠️ **PROJECT:** Build the **Catalog** REST API — `GET /products`, `GET /products/{id}`, `POST /products` (creator lists a digital product; in-memory for now).
-- [ ] 🧩 **Quiz:** Why should you never expose JPA entities directly as your API response?
+- [ ] 🛠️ **PROJECT:** Build the **Catalog** REST API — `GET /products`, `GET /products/{id}`, `POST /products`. A product has a **type**: `DIGITAL_GOOD` or `BOOKABLE_SESSION` (in-memory for now).
+- [ ] 🛠️ **PROJECT:** For `BOOKABLE_SESSION` products, add a `POST /products/{id}/slots` for the creator to define available time slots, and `GET /products/{id}/slots` to list open ones.
+- [ ] 🧩 **Quiz:** Why should you never expose JPA entities directly as your API response? How would you model two product types cleanly (single type + flag, or subtypes)?
 
 ## Session 2.4 — Validation & error handling (2 hrs)
 - [ ] Learn: Bean Validation (`@Valid`, `@NotBlank`, `@Email`, `@Positive`, custom validators)
@@ -146,7 +148,7 @@
 ## Session 2.5 — Layered architecture & checkout (2 hrs)
 - [ ] Learn: controller → service → repository layering; separation of concerns; package-by-feature vs package-by-layer
 - [ ] Learn: mapping DTO ↔ domain (manual or MapStruct)
-- [ ] 🛠️ **PROJECT:** Build the **Checkout** feature — buyer selects products, apply discount code, compute order total — cleanly layered.
+- [ ] 🛠️ **PROJECT:** Build the **Checkout** feature — buyer selects products (for a session, also picks a slot), apply discount code, compute order total — cleanly layered.
 - [ ] 🧩 **Quiz:** Your service class is 600 lines. What are the signs it's doing too much, and how do you split it?
 
 ## Session 2.6 — Testing the monolith (3 hrs, weekend)
@@ -165,7 +167,7 @@
 ---
 
 # 🗄️ PHASE 3 — Persistence & Data
-*Why: Real apps have real databases. Transactions & JPA internals go DEEP. (~20 hrs)*
+*Why: Real apps have real databases. Transactions & JPA internals go DEEP. (~24 hrs)*
 
 ## Session 3.1 — JPA/Hibernate foundations (2 hrs) ⭐ DEEP
 - [ ] Learn: ORM concept, JPA vs Hibernate vs Spring Data, the persistence context / first-level cache
@@ -182,7 +184,7 @@
 ## Session 3.3 — Relationships & fetching (2 hrs) ⭐ DEEP
 - [ ] Learn: `@OneToMany`/`@ManyToOne`/`@ManyToMany`/`@OneToOne`, owning side, join columns
 - [ ] Learn: lazy vs eager, the **N+1 problem**, `JOIN FETCH` / `@EntityGraph`
-- [ ] 🛠️ **PROJECT:** Model `Purchase → PurchaseItems → Product`, and `Creator → Products`; expose a purchase with its items.
+- [ ] 🛠️ **PROJECT:** Model `Purchase → PurchaseItems → Product`, `Creator → Products`, and for sessions `Product → AvailabilitySlots` + a `Booking` (buyer, slot, status); expose a purchase with its items.
 - [ ] 🏋️ **Exercise:** Deliberately trigger N+1, observe SQL logs, fix with a fetch join.
 - [ ] 🧩 **Quiz:** Why is `EAGER` fetching on collections usually a trap?
 
@@ -192,6 +194,15 @@
 - [ ] Learn: rollback rules, read-only transactions
 - [ ] 🛠️ **PROJECT:** Make "complete purchase" transactional: create purchase + grant entitlement atomically; roll back on failure.
 - [ ] 🧩 **Quiz:** You call `this.transactionalMethod()` internally and the transaction doesn't start. Explain exactly why.
+
+## Session 3.4b — No-double-booking: concurrency at the DB level (2 hrs) ⭐ DEEP
+**Objectives:** The signature booking problem — two buyers, one slot, only one wins. Money on the line.
+- [ ] Learn: why the in-memory fix from Session 1.6 fails across multiple app instances (the lock is per-JVM)
+- [ ] Learn: **optimistic locking** (`@Version`) vs **pessimistic locking** (`SELECT ... FOR UPDATE`) vs a **unique constraint** on `(slot_id)` — tradeoffs of each
+- [ ] Learn: isolation levels revisited — what actually prevents the race
+- [ ] 🏋️ **Exercise:** Reproduce the double-booking with 2 concurrent requests (JMeter/curl loop or a test). Confirm the bug, then fix it with a unique constraint AND with pessimistic locking; compare behavior under load.
+- [ ] 🛠️ **PROJECT:** Booking a session slot is now safe: concurrent buyers get exactly one winner; the loser gets a clean "slot taken" error.
+- [ ] 🧩 **Quiz:** A DB unique constraint and a pessimistic lock both prevent double-booking. When would you prefer each? What does optimistic locking add?
 
 ## Session 3.5 — Postgres + migrations (2 hrs)
 - [ ] Learn: swap H2 → PostgreSQL (via Docker — you know Docker), datasource config, connection pool (HikariCP)
@@ -251,8 +262,9 @@
 ## Session 4.5 — Cross-cutting concerns: AOP, async, scheduling (2 hrs)
 - [ ] Learn: Spring AOP (`@Aspect`) — logging/timing aspect; when AOP is right
 - [ ] Learn: `@Async` (thread-pool config), `@Scheduled` jobs, application events (`ApplicationEventPublisher`)
-- [ ] 🛠️ **PROJECT:** Add an audit-log aspect; send purchase-confirmation "email" (with download link) asynchronously via an application event.
-- [ ] 🧩 **Quiz:** How does `@Async` relate to the proxy mechanism you learned for `@Transactional`?
+- [ ] 🛠️ **PROJECT:** Add an audit-log aspect; send purchase-confirmation "email" (download link for goods, booking details for sessions) asynchronously via an application event.
+- [ ] 🛠️ **PROJECT:** Add `@Scheduled` jobs: (1) **session reminders** — "email" the buyer & creator before a booked session; (2) **hold expiry** — release unpaid slot holds after N minutes so the slot is bookable again.
+- [ ] 🧩 **Quiz:** How does `@Async` relate to the proxy mechanism you learned for `@Transactional`? Why is a scheduled hold-expiry job safer than trusting the client to release a slot?
 
 ## Session 4.6 — Dockerize the monolith (3 hrs, weekend)
 - [ ] Learn: multi-stage Dockerfile for a Spring Boot jar, layered jars, image size
@@ -273,7 +285,7 @@
 ## Session 5.1 — Why microservices (and why NOT) (2 hrs)
 - [ ] Learn: monolith vs microservices tradeoffs, bounded contexts, decomposition strategy, data-per-service
 - [ ] Learn: the new problems microservices create (network, consistency, ops)
-- [ ] 🛠️ **PROJECT:** Plan the split: **Catalog · Checkout/Payments · Delivery (Entitlement) · Payout · Notification** services + shared event contracts. Draw it.
+- [ ] 🛠️ **PROJECT:** Plan the split: **Catalog · Checkout/Payments · Delivery (Entitlement) · Booking · Payout · Notification** services + shared event contracts. Draw it. Note the two fulfillment branches off `PurchaseCompleted`: goods → Delivery, sessions → Booking.
 - [ ] 🧩 **Quiz:** Give 2 signs a system should stay a monolith, and 2 signs it should split.
 
 ## Session 5.2 — First service split (3 hrs, weekend)
@@ -297,8 +309,8 @@
 - [ ] Learn: `spring-kafka`, `KafkaTemplate` producer, `@KafkaListener` consumer, serialization (JSON/Avro awareness)
 - [ ] Learn: designing events (`PurchaseCompleted`, `EntitlementGranted`, `PayoutCredited`)
 - [ ] Learn: the **Stripe webhook** as the source of truth — payment confirmed → publish `PurchaseCompleted` to Kafka
-- [ ] 🛠️ **PROJECT:** Checkout/Payments handles the Stripe (test-mode) webhook and publishes `PurchaseCompleted`; **Delivery Service** consumes it and grants the entitlement.
-- [ ] 🧩 **Quiz:** Event notification vs event-carried-state-transfer — which are you using and why?
+- [ ] 🛠️ **PROJECT:** Checkout/Payments handles the Stripe (test-mode) webhook and publishes `PurchaseCompleted`. Two consumers branch on product type: **Delivery Service** grants the entitlement for goods; **Booking Service** confirms the reserved slot for sessions.
+- [ ] 🧩 **Quiz:** Event notification vs event-carried-state-transfer — which are you using and why? How does one event cleanly drive two different fulfillment paths?
 
 ## Session 5.6 — Kafka delivery semantics & reliability (2 hrs) ⭐ DEEP
 - [ ] Learn: at-most-once / at-least-once / exactly-once; acks, retries, **idempotent consumers**
@@ -308,8 +320,10 @@
 
 ## Session 5.7 — Complete the event choreography (3 hrs, weekend)
 - [ ] Learn: choreography vs orchestration, the **Saga** pattern for distributed transactions
-- [ ] 🛠️ **PROJECT:** Full signature flow via events: `PurchaseCompleted → EntitlementGranted → DownloadDelivered → BuyerNotified → CreatorPayoutCredited → SalesStatsUpdated`. Handle the failure path (entitlement/delivery fails → **refund the Stripe payment**, mark purchase failed) as a compensating saga.
-- [ ] 🧩 **Quiz:** Why can't you use a normal DB transaction across Payments + Delivery + Payout services? How does a saga (with compensation/refund) solve it?
+- [ ] 🛠️ **PROJECT:** Full signature flow via events: `PurchaseCompleted → (EntitlementGranted | BookingConfirmed) → BuyerNotified → CreatorPayoutCredited → SalesStatsUpdated`. Compensating sagas for BOTH paths:
+  - goods: entitlement/delivery fails → **refund** the Stripe payment, mark purchase failed
+  - session: the slot was taken between checkout and payment confirmation → **refund** the payment, notify buyer "slot no longer available", offer rebooking
+- [ ] 🧩 **Quiz:** Why can't you use a normal DB transaction across Payments + Booking + Payout services? Walk through the session refund saga step by step, including what compensating action each service runs.
 
 ## Session 5.8 — API Gateway + service discovery (2 hrs)
 - [ ] Learn: Spring Cloud Gateway (routing, filters), service discovery (Eureka) or its k8s equivalent, config server
@@ -325,7 +339,7 @@
 ## Session 5.10 — Microservices integration checkpoint (2 hrs)
 - [ ] 🛠️ **PROJECT:** `docker-compose` the entire stack (all services + Kafka + Postgres×N + Redis + gateway). Run the full happy path AND a failure path.
 - [ ] Review: system diagram v3 with sync vs async edges marked.
-- [ ] 🧩 **Quiz:** Trace one purchase end-to-end across every service and every Kafka topic it touches (Stripe webhook → download link in buyer's hands → creator payout credited).
+- [ ] 🧩 **Quiz:** Trace BOTH a digital-good purchase AND a session booking end-to-end across every service and Kafka topic (Stripe webhook → download link / confirmed booking in buyer's hands → creator payout credited). Include the double-booking-refund path.
 
 ---
 
@@ -378,7 +392,7 @@
 
 ## Session 7.4 — Deploy to the cloud (3 hrs, weekend)
 - [ ] Learn: pick a target (Railway/Render/Fly.io for simple, or AWS ECS/EKS for resume weight), managed Postgres/Kafka, **real S3** for files
-- [ ] 🛠️ **PROJECT:** Deploy at least Catalog + Checkout/Payments + Delivery + a managed DB + S3 to a real public URL, wired to Stripe test mode. **A real person can buy a digital product and download it.**
+- [ ] 🛠️ **PROJECT:** Deploy at least Catalog + Checkout/Payments + Delivery + Booking + a managed DB + S3 to a real public URL, wired to Stripe test mode. **A real person can buy a digital product and download it — or book a session slot.**
 - [ ] 🧩 **Quiz:** What changes between your `docker-compose` local setup and a real cloud deployment?
 
 ## Session 7.5 — Prod readiness + monitoring (2 hrs)
@@ -395,12 +409,13 @@
 
 # 🎓 Completion Criteria
 - [ ] Built ONE cohesive product — **CreatorHub**: monolith → microservices → event-driven → reactive → deployed
-- [ ] **A real person can buy a digital product with Stripe (test mode) and download it via a secure link**
-- [ ] Signature Kafka flow (`PurchaseCompleted → EntitlementGranted → Delivered → Notified → PayoutCredited → StatsUpdated`) with idempotency + compensating saga (refund on failure) working end-to-end
+- [ ] **A real person can (a) buy a digital product and download it via a secure link, AND (b) book a 1:1 session slot — both paid via Stripe (test mode)**
+- [ ] No-double-booking proven under concurrent load (two buyers, one slot, one winner)
+- [ ] Signature Kafka flow (`PurchaseCompleted → EntitlementGranted | BookingConfirmed → Notified → PayoutCredited → StatsUpdated`) with idempotency + compensating saga (refund on failure) for BOTH fulfillment paths
 - [ ] File storage via MinIO/S3 with pre-signed, entitlement-gated downloads
 - [ ] Deployed to a real cloud URL with CI/CD
 - [ ] Solid test coverage (unit + integration via Testcontainers)
-- [ ] Can explain: DI internals, transactions, N+1, Kafka semantics, webhook idempotency, saga/compensation, circuit breakers, reactive tradeoffs
+- [ ] Can explain: DI internals, transactions, N+1, optimistic vs pessimistic locking (no-double-booking), Kafka semantics, webhook idempotency, saga/compensation, circuit breakers, reactive tradeoffs
 - [ ] Portfolio README + demo ready
 - [ ] Comfortable in Java backend interviews (development + design)
 
