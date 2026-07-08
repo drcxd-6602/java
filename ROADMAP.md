@@ -1,7 +1,8 @@
 # 🚀 Java Backend Mastery Roadmap — Darshan
 
 > **Goal:** Job-ready Java backend developer at product companies.
-> **Approach:** Learn by building **ONE** evolving e-commerce / order system.
+> **Approach:** Learn by building **ONE** evolving product — **CreatorHub**, a Gumroad-style platform where creators sell digital goods (ebooks, presets, templates) and buyers get instant secure downloads. Real, deployable, common people can use it.
+> **Fixed decisions:** Stripe **test mode** for payments · **MinIO → S3** for file storage · signature event flow `PurchaseCompleted → GrantEntitlement → DeliverDownload → NotifyBuyer → CreditCreatorPayout → UpdateSalesStats`.
 > **Time:** 2 hrs weeknights · 3 hrs weekends (~19 hrs/week) · ~4 months.
 > **DSA:** handled separately (morning LeetCode) — not in this roadmap.
 >
@@ -50,11 +51,11 @@
 ## Session 0.3 — Project anatomy & first REST app (2 hrs)
 **Objectives:** See how a real Spring Boot app is laid out before diving deep.
 - [ ] Learn: standard Maven directory layout (`src/main/java`, `src/main/resources`, `src/test/java`)
-- [ ] Learn: packages & naming conventions (`com.darshan.ecommerce...`)
-- [ ] Use **start.spring.io** to generate the e-commerce project skeleton (Web, Lombok, DevTools)
+- [ ] Learn: packages & naming conventions (`com.darshan.creatorhub...`)
+- [ ] Use **start.spring.io** to generate the CreatorHub project skeleton (Web, Lombok, DevTools)
 - [ ] Run it; hit `http://localhost:8080` — understand the embedded Tomcat server
 - [ ] Write a trivial `@RestController` returning "hello"
-- [ ] 🛠️ **PROJECT:** Initialize the `ecommerce` repo/module. Commit the skeleton. This is your app for the next 4 months.
+- [ ] 🛠️ **PROJECT:** Initialize the `creatorhub` repo/module. Commit the skeleton. This is your app for the next 4 months.
 - [ ] 🧩 **Quiz:** What is "embedded Tomcat" and why is it a big deal vs deploying a WAR to an external server?
 
 ---
@@ -67,7 +68,7 @@
 - [ ] Learn: when to use which (Big-O + real backend scenarios)
 - [ ] Learn: `equals()`/`hashCode()` contract — and why HashMap breaks without it (C# `Equals`/`GetHashCode` analogy)
 - [ ] Learn: iteration, `Comparable` vs `Comparator`
-- [ ] 🏋️ **Exercise:** Build an in-memory product store using the right collections; sort products by price then name.
+- [ ] 🏋️ **Exercise:** Build an in-memory digital-product store using the right collections; sort products by price then title.
 - [ ] 🧩 **Quiz:** You put a mutable object in a `HashSet`, then mutate a field used in `hashCode()`. What breaks and why?
 
 ## Session 1.2 — Streams, lambdas, Optional (2 hrs)
@@ -75,7 +76,7 @@
 - [ ] Learn: Stream pipeline — `filter`, `map`, `flatMap`, `reduce`, `collect`, `groupingBy`, `sorted`
 - [ ] Learn: `Optional` — the right way (no `.get()` abuse); vs C# nullable
 - [ ] Learn: lazy evaluation & when streams DON'T help
-- [ ] 🏋️ **Exercise:** Given a `List<Order>`, compute total revenue per product category using streams + `groupingBy`.
+- [ ] 🏋️ **Exercise:** Given a `List<Sale>`, compute total revenue per creator (and per product category) using streams + `groupingBy`.
 - [ ] 🧩 **Quiz:** `map` vs `flatMap` — give a concrete example where only `flatMap` works.
 
 ## Session 1.3 — Modern Java & type system (2 hrs)
@@ -90,7 +91,7 @@
 - [ ] Learn: `try-with-resources`, `AutoCloseable`, `finally`
 - [ ] Learn: custom exceptions, exception hierarchy design, wrapping/chaining
 - [ ] Learn: anti-patterns (swallowing, catching `Exception`, exceptions as control flow)
-- [ ] 🏋️ **Exercise:** Design a clean exception hierarchy for the e-commerce domain (`OutOfStockException`, `PaymentFailedException`...).
+- [ ] 🏋️ **Exercise:** Design a clean exception hierarchy for the CreatorHub domain (`PaymentFailedException`, `EntitlementNotFoundException`, `DownloadExpiredException`...).
 - [ ] 🧩 **Quiz:** Why does Java have checked exceptions and C# doesn't? Argue both sides.
 
 ## Session 1.5 — Concurrency fundamentals I (2 hrs) ⭐ DEEP
@@ -105,7 +106,7 @@
 - [ ] Learn: `ConcurrentHashMap`, `Atomic*`, `CountDownLatch`, thread-safe design
 - [ ] Learn: virtual threads (Java 21) — what they change for backend
 - [ ] 🏋️ **Exercise:** Fetch 5 "product prices" concurrently with `CompletableFuture`, combine results, handle one failing.
-- [ ] 🛠️ **PROJECT:** Refactor the in-memory product store (from 1.1) into a small service layer with a thread-safe catalog. Commit.
+- [ ] 🛠️ **PROJECT:** Refactor the in-memory digital-product store (from 1.1) into a small service layer with a thread-safe catalog. Commit.
 - [ ] 🧩 **Quiz:** Explain to an interviewer: thread pool vs virtual threads — when does each win?
 
 ---
@@ -132,7 +133,7 @@
 - [ ] Learn: `@RestController`, `@GetMapping`/`@PostMapping`/etc, `@PathVariable`, `@RequestParam`, `@RequestBody`
 - [ ] Learn: `ResponseEntity`, status codes, content negotiation, DTOs vs entities
 - [ ] Learn: REST design basics (resources, verbs, idempotency)
-- [ ] 🛠️ **PROJECT:** Build the **Catalog** REST API — `GET /products`, `GET /products/{id}`, `POST /products` (in-memory for now).
+- [ ] 🛠️ **PROJECT:** Build the **Catalog** REST API — `GET /products`, `GET /products/{id}`, `POST /products` (creator lists a digital product; in-memory for now).
 - [ ] 🧩 **Quiz:** Why should you never expose JPA entities directly as your API response?
 
 ## Session 2.4 — Validation & error handling (2 hrs)
@@ -142,24 +143,24 @@
 - [ ] 🛠️ **PROJECT:** Add validation to `POST /products`; add a global exception handler returning clean JSON errors.
 - [ ] 🧩 **Quiz:** Where should business-rule validation live vs input validation? Why?
 
-## Session 2.5 — Layered architecture & the cart (2 hrs)
+## Session 2.5 — Layered architecture & checkout (2 hrs)
 - [ ] Learn: controller → service → repository layering; separation of concerns; package-by-feature vs package-by-layer
 - [ ] Learn: mapping DTO ↔ domain (manual or MapStruct)
-- [ ] 🛠️ **PROJECT:** Build the **Cart** feature — add/remove items, compute totals — cleanly layered.
+- [ ] 🛠️ **PROJECT:** Build the **Checkout** feature — buyer selects products, apply discount code, compute order total — cleanly layered.
 - [ ] 🧩 **Quiz:** Your service class is 600 lines. What are the signs it's doing too much, and how do you split it?
 
 ## Session 2.6 — Testing the monolith (3 hrs, weekend)
 - [ ] Learn: JUnit 5 (`@Test`, assertions, lifecycle), AAA pattern
 - [ ] Learn: Mockito — mock/stub/verify; unit-test a service in isolation
 - [ ] Learn: `@WebMvcTest` + `MockMvc` for controller tests
-- [ ] 🛠️ **PROJECT:** Write unit tests for `CartService` and a `MockMvc` test for the catalog controller.
+- [ ] 🛠️ **PROJECT:** Write unit tests for `CheckoutService` and a `MockMvc` test for the catalog controller.
 - [ ] 🧩 **Quiz:** What's the difference between a unit test and an integration test here? What do you mock in each?
 
-## Session 2.7 — Orders + monolith checkpoint (2 hrs)
-- [ ] 🛠️ **PROJECT:** Build the **Orders** feature (place order from cart, in-memory order store, status enum).
-- [ ] 🛠️ **PROJECT:** End-to-end manual test: browse → add to cart → place order.
+## Session 2.7 — Purchase + monolith checkpoint (2 hrs)
+- [ ] 🛠️ **PROJECT:** Build the **Purchase** feature (create a purchase from checkout, in-memory order store, status enum: PENDING/PAID/DELIVERED).
+- [ ] 🛠️ **PROJECT:** End-to-end manual test: browse catalog → checkout → create purchase.
 - [ ] Review: draw your current architecture (controllers/services/repos) — 1 diagram.
-- [ ] 🧩 **Quiz:** Walk through the full request lifecycle of `POST /orders` from HTTP to response.
+- [ ] 🧩 **Quiz:** Walk through the full request lifecycle of `POST /purchases` from HTTP to response.
 
 ---
 
@@ -181,7 +182,7 @@
 ## Session 3.3 — Relationships & fetching (2 hrs) ⭐ DEEP
 - [ ] Learn: `@OneToMany`/`@ManyToOne`/`@ManyToMany`/`@OneToOne`, owning side, join columns
 - [ ] Learn: lazy vs eager, the **N+1 problem**, `JOIN FETCH` / `@EntityGraph`
-- [ ] 🛠️ **PROJECT:** Model `Order → OrderItems → Product`; expose an order with its items.
+- [ ] 🛠️ **PROJECT:** Model `Purchase → PurchaseItems → Product`, and `Creator → Products`; expose a purchase with its items.
 - [ ] 🏋️ **Exercise:** Deliberately trigger N+1, observe SQL logs, fix with a fetch join.
 - [ ] 🧩 **Quiz:** Why is `EAGER` fetching on collections usually a trap?
 
@@ -189,7 +190,7 @@
 - [ ] Learn: `@Transactional` — how Spring proxies it, propagation (`REQUIRED`, `REQUIRES_NEW`...), isolation levels
 - [ ] Learn: the self-invocation gotcha (why calling a `@Transactional` method from the same class fails)
 - [ ] Learn: rollback rules, read-only transactions
-- [ ] 🛠️ **PROJECT:** Make "place order" transactional: deduct inventory + create order atomically; roll back on failure.
+- [ ] 🛠️ **PROJECT:** Make "complete purchase" transactional: create purchase + grant entitlement atomically; roll back on failure.
 - [ ] 🧩 **Quiz:** You call `this.transactionalMethod()` internally and the transaction doesn't start. Explain exactly why.
 
 ## Session 3.5 — Postgres + migrations (2 hrs)
@@ -206,8 +207,17 @@
 
 ## Session 3.7 — Integration testing with real infra (2 hrs)
 - [ ] Learn: `@DataJpaTest`, `@SpringBootTest`, **Testcontainers** (spin real Postgres/Redis in tests)
-- [ ] 🛠️ **PROJECT:** Write a Testcontainers-backed integration test for the order-placement flow.
+- [ ] 🛠️ **PROJECT:** Write a Testcontainers-backed integration test for the purchase → entitlement flow.
 - [ ] 🧩 **Quiz:** Why is Testcontainers better than an in-memory H2 for integration tests?
+
+## Session 3.8 — File storage: upload & secure downloads (2 hrs) ⭐ DEEP
+**Objectives:** The heart of a digital-goods platform — store the product artifact, serve it only to buyers.
+- [ ] Learn: object storage vs filesystem/DB blobs; the S3 model (buckets/objects/keys)
+- [ ] Learn: run **MinIO** in Docker (S3-compatible), Spring integration via the AWS SDK
+- [ ] Learn: multipart upload, **pre-signed URLs**, why you never proxy large files through your app
+- [ ] Learn: securing downloads — signed, time-limited URLs gated by entitlement
+- [ ] 🛠️ **PROJECT:** Creators upload a digital file to MinIO on product create; buyers with a valid entitlement get a time-limited signed download URL. Unauthorized buyers get 403.
+- [ ] 🧩 **Quiz:** Why serve downloads via pre-signed URLs instead of streaming bytes through your Spring controller?
 
 ---
 
@@ -217,7 +227,7 @@
 ## Session 4.1 — Spring Security fundamentals (2 hrs) ⭐ DEEP
 - [ ] Learn: the security filter chain, authentication vs authorization
 - [ ] Learn: `UserDetailsService`, `PasswordEncoder` (BCrypt), securing endpoints
-- [ ] 🛠️ **PROJECT:** Add users + roles (`USER`, `ADMIN`, `SELLER`); protect admin endpoints.
+- [ ] 🛠️ **PROJECT:** Add users + roles (`BUYER`, `CREATOR`, `ADMIN`); creators manage own products, protect admin endpoints.
 - [ ] 🧩 **Quiz:** Walk through what happens in the filter chain when a request hits a protected endpoint.
 
 ## Session 4.2 — JWT authentication (2 hrs)
@@ -241,7 +251,7 @@
 ## Session 4.5 — Cross-cutting concerns: AOP, async, scheduling (2 hrs)
 - [ ] Learn: Spring AOP (`@Aspect`) — logging/timing aspect; when AOP is right
 - [ ] Learn: `@Async` (thread-pool config), `@Scheduled` jobs, application events (`ApplicationEventPublisher`)
-- [ ] 🛠️ **PROJECT:** Add an audit-log aspect; send order-confirmation "email" asynchronously via an application event.
+- [ ] 🛠️ **PROJECT:** Add an audit-log aspect; send purchase-confirmation "email" (with download link) asynchronously via an application event.
 - [ ] 🧩 **Quiz:** How does `@Async` relate to the proxy mechanism you learned for `@Transactional`?
 
 ## Session 4.6 — Dockerize the monolith (3 hrs, weekend)
@@ -263,7 +273,7 @@
 ## Session 5.1 — Why microservices (and why NOT) (2 hrs)
 - [ ] Learn: monolith vs microservices tradeoffs, bounded contexts, decomposition strategy, data-per-service
 - [ ] Learn: the new problems microservices create (network, consistency, ops)
-- [ ] 🛠️ **PROJECT:** Plan the split: **Catalog · Order · Inventory · Notification** services + shared contracts. Draw it.
+- [ ] 🛠️ **PROJECT:** Plan the split: **Catalog · Checkout/Payments · Delivery (Entitlement) · Payout · Notification** services + shared event contracts. Draw it.
 - [ ] 🧩 **Quiz:** Give 2 signs a system should stay a monolith, and 2 signs it should split.
 
 ## Session 5.2 — First service split (3 hrs, weekend)
@@ -273,7 +283,7 @@
 
 ## Session 5.3 — Synchronous comms: REST + Feign (2 hrs)
 - [ ] Learn: service-to-service HTTP, OpenFeign declarative clients, `WebClient`, timeouts
-- [ ] 🛠️ **PROJECT:** Extract **Order Service**; it calls Catalog via Feign to validate products.
+- [ ] 🛠️ **PROJECT:** Extract **Checkout/Payments Service**; it calls Catalog via Feign to validate products & price before creating a Stripe checkout.
 - [ ] 🧩 **Quiz:** What are the risks of synchronous service-to-service calls (chains, latency, cascading failure)?
 
 ## Session 5.4 — Kafka fundamentals (2 hrs) ⭐ DEEP
@@ -285,20 +295,21 @@
 
 ## Session 5.5 — Kafka with Spring: event-driven flow (3 hrs, weekend) ⭐ DEEP
 - [ ] Learn: `spring-kafka`, `KafkaTemplate` producer, `@KafkaListener` consumer, serialization (JSON/Avro awareness)
-- [ ] Learn: designing events (`OrderPlaced`, `InventoryReserved`, `OrderConfirmed`)
-- [ ] 🛠️ **PROJECT:** Order Service publishes `OrderPlaced`; **Inventory Service** consumes it and reserves stock.
+- [ ] Learn: designing events (`PurchaseCompleted`, `EntitlementGranted`, `PayoutCredited`)
+- [ ] Learn: the **Stripe webhook** as the source of truth — payment confirmed → publish `PurchaseCompleted` to Kafka
+- [ ] 🛠️ **PROJECT:** Checkout/Payments handles the Stripe (test-mode) webhook and publishes `PurchaseCompleted`; **Delivery Service** consumes it and grants the entitlement.
 - [ ] 🧩 **Quiz:** Event notification vs event-carried-state-transfer — which are you using and why?
 
 ## Session 5.6 — Kafka delivery semantics & reliability (2 hrs) ⭐ DEEP
 - [ ] Learn: at-most-once / at-least-once / exactly-once; acks, retries, **idempotent consumers**
 - [ ] Learn: dead-letter topics, error handling, offset commit strategies
-- [ ] 🛠️ **PROJECT:** Make the inventory consumer idempotent (dedupe by event id); add a DLT for poison messages.
-- [ ] 🧩 **Quiz:** A consumer processes a message then crashes before committing the offset. What happens on restart? How do you stay correct?
+- [ ] 🛠️ **PROJECT:** Make the Delivery consumer idempotent (dedupe by Stripe event id / purchase id — Stripe really does resend webhooks); add a DLT for poison messages.
+- [ ] 🧩 **Quiz:** Stripe sends the same `checkout.completed` webhook twice. Why, and how do you make sure the buyer gets exactly one entitlement (not two)?
 
 ## Session 5.7 — Complete the event choreography (3 hrs, weekend)
 - [ ] Learn: choreography vs orchestration, the **Saga** pattern for distributed transactions
-- [ ] 🛠️ **PROJECT:** Full flow via events: `OrderPlaced → InventoryReserved → OrderConfirmed → Notification sent`. Handle the failure path (out-of-stock → order cancelled) as a saga.
-- [ ] 🧩 **Quiz:** Why can't you use a normal DB transaction across Order + Inventory services? How does a saga solve it?
+- [ ] 🛠️ **PROJECT:** Full signature flow via events: `PurchaseCompleted → EntitlementGranted → DownloadDelivered → BuyerNotified → CreatorPayoutCredited → SalesStatsUpdated`. Handle the failure path (entitlement/delivery fails → **refund the Stripe payment**, mark purchase failed) as a compensating saga.
+- [ ] 🧩 **Quiz:** Why can't you use a normal DB transaction across Payments + Delivery + Payout services? How does a saga (with compensation/refund) solve it?
 
 ## Session 5.8 — API Gateway + service discovery (2 hrs)
 - [ ] Learn: Spring Cloud Gateway (routing, filters), service discovery (Eureka) or its k8s equivalent, config server
@@ -308,13 +319,13 @@
 ## Session 5.9 — Resilience + distributed tracing (2 hrs) ⭐ DEEP
 - [ ] Learn: Resilience4j (circuit breaker, retry, bulkhead, rate limiter, timeout), fallback design
 - [ ] Learn: distributed tracing (Micrometer Tracing + Zipkin/Tempo), correlation across services
-- [ ] 🛠️ **PROJECT:** Add a circuit breaker to Order→Catalog calls with a fallback; wire tracing across the whole flow.
+- [ ] 🛠️ **PROJECT:** Add a circuit breaker to Checkout→Catalog calls with a fallback; wire tracing across the whole purchase flow.
 - [ ] 🧩 **Quiz:** Explain circuit breaker states (closed/open/half-open) and when each transition happens.
 
 ## Session 5.10 — Microservices integration checkpoint (2 hrs)
 - [ ] 🛠️ **PROJECT:** `docker-compose` the entire stack (all services + Kafka + Postgres×N + Redis + gateway). Run the full happy path AND a failure path.
 - [ ] Review: system diagram v3 with sync vs async edges marked.
-- [ ] 🧩 **Quiz:** Trace one order end-to-end across every service and every Kafka topic it touches.
+- [ ] 🧩 **Quiz:** Trace one purchase end-to-end across every service and every Kafka topic it touches (Stripe webhook → download link in buyer's hands → creator payout credited).
 
 ---
 
@@ -335,7 +346,7 @@
 ## Session 6.3 — Reactive data + backpressure (3 hrs, weekend) ⭐ DEEP
 - [ ] Learn: R2DBC (reactive Postgres) or reactive Redis; end-to-end non-blocking
 - [ ] Learn: backpressure — what it is, how Reactor handles it, `onBackpressureBuffer/Drop`
-- [ ] 🛠️ **PROJECT:** Make the reactive Catalog fully non-blocking (R2DBC); stream a large product list with SSE.
+- [ ] 🛠️ **PROJECT:** Make the reactive read-path fully non-blocking (R2DBC); build a **live creator sales dashboard** that streams sales/revenue updates over SSE as `SalesStatsUpdated` events arrive from Kafka.
 - [ ] 🧩 **Quiz:** Describe a concrete backpressure scenario in your app and how the reactive stack handles it.
 
 ## Session 6.4 — Reactive vs blocking: measure & decide (2 hrs)
@@ -356,7 +367,7 @@
 ## Session 7.2 — Kubernetes basics (3 hrs, weekend) ⭐ DEEP
 - [ ] Learn: pods, deployments, services, config maps, secrets, ingress (concepts + why k8s exists)
 - [ ] Learn: run locally with kind/minikube or Docker Desktop k8s
-- [ ] 🛠️ **PROJECT:** Deploy Catalog + Order + Kafka to a local k8s cluster; expose via ingress.
+- [ ] 🛠️ **PROJECT:** Deploy Catalog + Checkout/Payments + Delivery + Kafka to a local k8s cluster; expose via ingress.
 - [ ] 🧩 **Quiz:** Deployment vs Service vs Ingress — what does each do?
 
 ## Session 7.3 — CI/CD pipeline (2 hrs)
@@ -366,8 +377,8 @@
 - [ ] 🧩 **Quiz:** Where in the pipeline should tests run, and what should fail the build?
 
 ## Session 7.4 — Deploy to the cloud (3 hrs, weekend)
-- [ ] Learn: pick a target (Railway/Render/Fly.io for simple, or AWS ECS/EKS for resume weight), managed Postgres/Kafka
-- [ ] 🛠️ **PROJECT:** Deploy at least the Order + Catalog services + a managed DB to a real public URL.
+- [ ] Learn: pick a target (Railway/Render/Fly.io for simple, or AWS ECS/EKS for resume weight), managed Postgres/Kafka, **real S3** for files
+- [ ] 🛠️ **PROJECT:** Deploy at least Catalog + Checkout/Payments + Delivery + a managed DB + S3 to a real public URL, wired to Stripe test mode. **A real person can buy a digital product and download it.**
 - [ ] 🧩 **Quiz:** What changes between your `docker-compose` local setup and a real cloud deployment?
 
 ## Session 7.5 — Prod readiness + monitoring (2 hrs)
@@ -383,11 +394,13 @@
 ---
 
 # 🎓 Completion Criteria
-- [ ] Built ONE cohesive system: monolith → microservices → event-driven → reactive → deployed
-- [ ] Kafka event-driven flow with idempotency + saga working end-to-end
+- [ ] Built ONE cohesive product — **CreatorHub**: monolith → microservices → event-driven → reactive → deployed
+- [ ] **A real person can buy a digital product with Stripe (test mode) and download it via a secure link**
+- [ ] Signature Kafka flow (`PurchaseCompleted → EntitlementGranted → Delivered → Notified → PayoutCredited → StatsUpdated`) with idempotency + compensating saga (refund on failure) working end-to-end
+- [ ] File storage via MinIO/S3 with pre-signed, entitlement-gated downloads
 - [ ] Deployed to a real cloud URL with CI/CD
 - [ ] Solid test coverage (unit + integration via Testcontainers)
-- [ ] Can explain: DI internals, transactions, N+1, Kafka semantics, circuit breakers, reactive tradeoffs
+- [ ] Can explain: DI internals, transactions, N+1, Kafka semantics, webhook idempotency, saga/compensation, circuit breakers, reactive tradeoffs
 - [ ] Portfolio README + demo ready
 - [ ] Comfortable in Java backend interviews (development + design)
 

@@ -13,10 +13,17 @@ This repo is Darshan's Java backend mastery journey. When working here, you are 
 
 ## What he's building
 
-**One evolving e-commerce / order-management system** that grows across phases:
-monolith → persistence → production-hardened → **microservices + Kafka events** → **reactive (WebFlux) capstone** → **deployed to cloud with CI/CD**.
+**One evolving product: a creator platform for selling digital goods** (Gumroad-style — call it "CreatorHub"). Creators upload digital products (ebooks, presets, templates, courses); buyers purchase via a link and get instant secure downloads; creators get payouts. Real, deployable, common people can actually use it.
 
-Kafka / event-driven microservices and scalable-app design are his top priorities.
+It grows across phases: monolith → persistence → production-hardened → **microservices + Kafka events** → **reactive (WebFlux) capstone** → **deployed to cloud with CI/CD**.
+
+**Fixed tech decisions (don't re-litigate):**
+- **Payments:** Stripe **test mode** — real webhooks, real idempotency/saga learning, no real money.
+- **File storage:** S3-compatible — **MinIO** (Docker) locally, real **S3** in cloud. Signed download URLs, multipart upload.
+- **Why this domain:** no shipping/logistics noise; payment webhooks + entitlements + payouts give genuine distributed-systems problems (idempotency, saga, eventual consistency) that generic e-commerce hand-waves.
+
+Kafka / event-driven microservices and scalable-app design are his top priorities. The signature event flow:
+`PurchaseCompleted → GrantEntitlement → DeliverDownload → NotifyBuyer → CreditCreatorPayout → UpdateSalesStats`.
 
 ## How to teach (his explicit asks)
 
