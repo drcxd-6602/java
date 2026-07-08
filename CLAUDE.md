@@ -77,6 +77,7 @@ There is a **`quiz-master`** agent (and a `/quiz <topic>` command) for testing h
 4. When he asks a doubt/question, answer in **2-3 lines, simple, enough to clear it — then stop.** Do NOT write essays. Do NOT over-think obvious questions. Short, correct, done.
 5. Only go longer if he explicitly asks "explain in detail" or the question is genuinely deep.
 6. Doc location + naming: `lessons/<session-number>.<short-kebab-topic>.md`. All lesson docs live in the `lessons/` folder at repo root. One doc per session.
+7. **Do NOT commit a lesson doc when you write it.** Write it, let him learn + do the exercises. Only commit the doc AFTER he has completed the session's exercises and passed all tasks — then commit the doc + ROADMAP checkboxes + progress log together in one commit.
 
 ## Session ritual
 
