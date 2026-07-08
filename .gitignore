@@ -9,3 +9,14 @@
 out/
 target/
 bin/
+
+# Claude Code (local/machine-specific only; keep CLAUDE.md, .claude/agents, .claude/commands tracked)
+.claude/settings.local.json
+.claude/**/*.local.json
+.claude/logs/
+.claude/cache/
+.claude/.cache/
+.claude/history/
+.claude/shell-snapshots/
+.claude/todos/
+.claude/statsig/
