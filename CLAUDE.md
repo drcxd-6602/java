@@ -99,7 +99,7 @@ There is a **`quiz-master`** agent (and a `/quiz <topic>` command) for testing h
 *(Update after every session. Newest at top. Format: `YYYY-MM-DD · Session X.Y — <topic> · <how it went>`)*
 
 <!-- Add entries here -->
-- _(no sessions completed yet)_
+- 2026-07-08 · Session 0.1 — Java runtime model & setup · Exercise + quiz done. Solid grasp of javac/JVM. Minor slips: said "java created .class" (it was javac); missed bytecode≈IL. Both corrected.
 
 ---
 

@@ -31,13 +31,13 @@
 
 ## Session 0.1 — The Java runtime model & setup (2 hrs)
 **Objectives:** Understand JDK vs JRE vs JVM; get a working environment.
-- [ ] Learn: JDK vs JRE vs JVM, bytecode, `javac` → `.class` → JVM (vs C#'s CLR/IL — direct analogy)
-- [ ] Learn: what a JVM actually does (class loading, JIT, GC at a high level)
-- [ ] Install JDK 21 (LTS), verify `java -version` / `javac -version`
-- [ ] Install IntelliJ IDEA Community, configure JDK
-- [ ] Create + run a plain `main()` from IntelliJ and from terminal
-- [ ] 🏋️ **Exercise:** Compile a `.java` by hand with `javac`, run with `java`, inspect the `.class` exists. Explain in your own words what each step did.
-- [ ] 🧩 **Quiz:** Why can a `.class` file run on Windows, Mac, and Linux without recompiling? What's the C# equivalent of the JVM?
+- [x] Learn: JDK vs JRE vs JVM, bytecode, `javac` → `.class` → JVM (vs C#'s CLR/IL — direct analogy)
+- [x] Learn: what a JVM actually does (class loading, JIT, GC at a high level)
+- [x] Install JDK 21 (LTS), verify `java -version` / `javac -version`
+- [x] Install IntelliJ IDEA Community, configure JDK
+- [x] Create + run a plain `main()` from IntelliJ and from terminal
+- [x] 🏋️ **Exercise:** Compile a `.java` by hand with `javac`, run with `java`, inspect the `.class` exists. Explain in your own words what each step did.
+- [x] 🧩 **Quiz:** Why can a `.class` file run on Windows, Mac, and Linux without recompiling? What's the C# equivalent of the JVM?
 
 ## Session 0.2 — Build tools: Maven & Gradle (2 hrs)
 **Objectives:** Master your #1 gap. NuGet/MSBuild → Maven/Gradle mental model.
