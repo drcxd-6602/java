@@ -76,14 +76,14 @@ There is a **`quiz-master`** agent (and a `/quiz <topic>` command) for testing h
 3. He reads the doc himself. **Learning from it is HIS job**, not yours to re-explain.
 4. When he asks a doubt/question, answer in **2-3 lines, simple, enough to clear it — then stop.** Do NOT write essays. Do NOT over-think obvious questions. Short, correct, done.
 5. Only go longer if he explicitly asks "explain in detail" or the question is genuinely deep.
-6. Doc naming: `<session-number>.<short-kebab-topic>.md` at repo root. One doc per session.
+6. Doc location + naming: `lessons/<session-number>.<short-kebab-topic>.md`. All lesson docs live in the `lessons/` folder at repo root. One doc per session.
 
 ## Session ritual
 
 **At the start of a study session:**
 1. Find current session in ROADMAP.md (first unchecked one).
 2. **Gate check:** if the PREVIOUS session's exercises/project were never shown and verified, do NOT start the new one. Go finish the old one first.
-3. Write the session doc `<session>.<topic>.md` (see "How teaching works" above). Point him to it.
+3. Write the session doc `lessons/<session>.<topic>.md` (see "How teaching works" above). Point him to it.
 4. He reads it and asks doubts → answer in 2-3 lines each. Then he does the exercise/quiz and the project slice.
 
 **At the end of a study session (do all of this):**
