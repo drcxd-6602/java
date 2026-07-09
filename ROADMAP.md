@@ -41,12 +41,12 @@
 
 ## Session 0.2 — Build tools: Maven & Gradle (2 hrs)
 **Objectives:** Master your #1 gap. NuGet/MSBuild → Maven/Gradle mental model.
-- [ ] Learn: what a build tool does (deps, compile, test, package, run)
-- [ ] Learn: Maven `pom.xml`, coordinates (groupId/artifactId/version), lifecycle phases, `mvn` commands
-- [ ] Learn: Gradle `build.gradle`, tasks, when teams pick Gradle vs Maven
-- [ ] Learn: dependency scopes, transitive deps, the local `~/.m2` repo
-- [ ] 🏋️ **Exercise:** Create a Maven project, add a dependency (e.g. Guava), use one class from it, `mvn package`, run the jar.
-- [ ] 🧩 **Quiz:** Map these C# concepts → Java: NuGet package, `.csproj`, `dotnet build`, `dotnet run`, `bin/`.
+- [x] Learn: what a build tool does (deps, compile, test, package, run)
+- [x] Learn: Maven `pom.xml`, coordinates (groupId/artifactId/version), lifecycle phases, `mvn` commands
+- [x] Learn: Gradle `build.gradle`, tasks, when teams pick Gradle vs Maven
+- [x] Learn: dependency scopes, transitive deps, the local `~/.m2` repo
+- [x] 🏋️ **Exercise:** Create a Maven project, add a dependency (e.g. Guava), use one class from it, `mvn package`, run the jar.
+- [x] 🧩 **Quiz:** Map these C# concepts → Java: NuGet package, `.csproj`, `dotnet build`, `dotnet run`, `bin/`.
 
 ## Session 0.3 — Project anatomy & first REST app (2 hrs)
 **Objectives:** See how a real Spring Boot app is laid out before diving deep.
