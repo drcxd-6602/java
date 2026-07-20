@@ -12,7 +12,7 @@
 
 ## 📊 Phase Progress Tracker
 
-- [ ] **Phase 0** — Ecosystem Bootstrap (how Java apps are built)
+- [x] **Phase 0** — Ecosystem Bootstrap (how Java apps are built)
 - [ ] **Phase 1** — Core Java for Backend (the parts C# didn't give you)
 - [ ] **Phase 2** — Spring Boot Core + Monolith
 - [ ] **Phase 3** — Persistence & Data (JPA / Hibernate / Postgres / Redis)
@@ -50,13 +50,13 @@
 
 ## Session 0.3 — Project anatomy & first REST app (2 hrs)
 **Objectives:** See how a real Spring Boot app is laid out before diving deep.
-- [ ] Learn: standard Maven directory layout (`src/main/java`, `src/main/resources`, `src/test/java`)
-- [ ] Learn: packages & naming conventions (`com.darshan.creatorhub...`)
-- [ ] Use **start.spring.io** to generate the CreatorHub project skeleton (Web, Lombok, DevTools)
-- [ ] Run it; hit `http://localhost:8080` — understand the embedded Tomcat server
-- [ ] Write a trivial `@RestController` returning "hello"
-- [ ] 🛠️ **PROJECT:** Initialize the `creatorhub` repo/module. Commit the skeleton. This is your app for the next 4 months.
-- [ ] 🧩 **Quiz:** What is "embedded Tomcat" and why is it a big deal vs deploying a WAR to an external server?
+- [x] Learn: standard Maven directory layout (`src/main/java`, `src/main/resources`, `src/test/java`)
+- [x] Learn: packages & naming conventions (`com.darshan.creatorhub...`)
+- [x] Use **start.spring.io** to generate the CreatorHub project skeleton (Web, Lombok, DevTools)
+- [x] Run it; hit `http://localhost:8080` — understand the embedded Tomcat server
+- [x] Write a trivial `@RestController` returning "hello"
+- [x] 🛠️ **PROJECT:** Initialize the `creatorhub` repo/module. Commit the skeleton. This is your app for the next 4 months.
+- [x] 🧩 **Quiz:** What is "embedded Tomcat" and why is it a big deal vs deploying a WAR to an external server?
 
 ---
 
