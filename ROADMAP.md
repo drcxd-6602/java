@@ -64,12 +64,12 @@
 *Why: The Java-specific parts C# habits won't cover. Concurrency goes DEEP — it underpins everything later. (~12 hrs)*
 
 ## Session 1.1 — Collections deep dive (2 hrs)
-- [ ] Learn: `List`/`ArrayList`/`LinkedList`, `Set`/`HashSet`/`TreeSet`, `Map`/`HashMap`/`TreeMap`, `Queue`/`Deque`
-- [ ] Learn: when to use which (Big-O + real backend scenarios)
-- [ ] Learn: `equals()`/`hashCode()` contract — and why HashMap breaks without it (C# `Equals`/`GetHashCode` analogy)
-- [ ] Learn: iteration, `Comparable` vs `Comparator`
-- [ ] 🏋️ **Exercise:** Build an in-memory digital-product store using the right collections; sort products by price then title.
-- [ ] 🧩 **Quiz:** You put a mutable object in a `HashSet`, then mutate a field used in `hashCode()`. What breaks and why?
+- [x] Learn: `List`/`ArrayList`/`LinkedList`, `Set`/`HashSet`/`TreeSet`, `Map`/`HashMap`/`TreeMap`, `Queue`/`Deque`
+- [x] Learn: when to use which (Big-O + real backend scenarios)
+- [x] Learn: `equals()`/`hashCode()` contract — and why HashMap breaks without it (C# `Equals`/`GetHashCode` analogy)
+- [x] Learn: iteration, `Comparable` vs `Comparator`
+- [x] 🏋️ **Exercise:** Build an in-memory digital-product store using the right collections; sort products by price then title.
+- [x] 🧩 **Quiz:** You put a mutable object in a `HashSet`, then mutate a field used in `hashCode()`. What breaks and why?
 
 ## Session 1.2 — Streams, lambdas, Optional (2 hrs)
 - [ ] Learn: functional interfaces, lambdas, method references (`::`)

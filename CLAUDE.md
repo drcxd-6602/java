@@ -100,6 +100,7 @@ There is a **`quiz-master`** agent (and a `/quiz <topic>` command) for testing h
 *(Update after every session. Newest at top. Format: `YYYY-MM-DD · Session X.Y — <topic> · <how it went>`)*
 
 <!-- Add entries here -->
+- 2026-07-21 · Session 1.1 — Collections deep dive · PHASE 1 START. Exercise done + wired into REST endpoints (/products sort, /getPrice, HashSet dedup) — verified live. Correct equals/hashCode. Quiz 2/3: solid on the contract; needs "HashMap vs TreeMap = order/speed, NOT accuracy". Fixed Product fields public→private final (immutable key, good instinct).
 - 2026-07-20 · Session 0.3 — Project anatomy & first REST app · PHASE 0 DONE. Generated CreatorHub Spring Boot skeleton (own repo, com.darshancodes.creatorhub), runs on Tomcat 8080, /hello works. Quiz 3/3. Verified via build+curl (his IntelliJ instance held 8080, so my jar hit "port in use" — expected).
 - 2026-07-09 · Session 0.2 — Build tools (Maven & Gradle) · Exercise + quiz done (5/5). Went beyond: built a runnable fat jar with Shade plugin, debugged manifest + NoClassDefFound himself. Vocab fix: "package" (namespace) ≠ "dependency". Installed Maven manually (not in winget).
 - 2026-07-08 · Session 0.1 — Java runtime model & setup · Exercise + quiz done. Solid grasp of javac/JVM. Minor slips: said "java created .class" (it was javac); missed bytecode≈IL. Both corrected.
